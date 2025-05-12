@@ -90,7 +90,7 @@ COPY --from=builder-pg_search /tmp/paradedb/target/release/pg_search-pg${PG_VERS
 
 # Initialize database with extensions
 RUN sed -i "s#^module_pathname = .*#module_pathname = '\$libdir/plugins/pg_search'#" /usr/share/postgresql/${PG_VERSION_MAJOR}/extension/pg_search.control && \
-    sed -i "s/^#shared_preload_libraries = ''/shared_preload_libraries = 'pg_search'/" /usr/share/postgresql/postgresql.conf.sample
+    sed -i "s|^#shared_preload_libraries = ''|shared_preload_libraries = '\$libdir/plugins/pg_search'|" /usr/share/postgresql/postgresql.conf.sample
 
 # Set up entrypoint to create extensions
 COPY docker-entrypoint-initdb.d /docker-entrypoint-initdb.d
