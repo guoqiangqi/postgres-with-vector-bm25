@@ -1,0 +1,29 @@
+[package]
+name = "lindera-ko-dic"
+version = "0.40.2"
+edition = "2021"
+description = "A Japanese morphological dictionary for ko-dic."
+documentation = "https://docs.rs/lindera-ko-dic"
+homepage = "https://github.com/lindera-morphology/lindera"
+repository = "https://github.com/lindera-morphology/lindera"
+readme = "README.md"
+keywords = ["korean", "morphological", "dictionary", "ko-dic"]
+categories = ["text-processing"]
+license = "MIT"
+
+[features]
+ko-dic = []
+compress = ["lindera-dictionary/compress"]
+
+[dependencies]
+bincode = "1.3.3"
+byteorder = "1.5.0"
+once_cell = "1.21.3"
+lindera-dictionary = "0.40.2"
+
+[build-dependencies]
+tokio = {version = "1.44.1", features = ["rt-multi-thread", "macros"] }
+
+[build-dependencies.lindera-dictionary]
+version = "0.40.2"
+features = ["build_rs"]

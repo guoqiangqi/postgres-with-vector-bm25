@@ -65,6 +65,21 @@ RUN PGRX_VERSION=$(cargo tree --depth 1 -i pgrx -p pg_search | head -n 1 | sed -
     cargo install --locked cargo-pgrx --version "${PGRX_VERSION}" && \
     cargo pgrx init "--pg${PG_VERSION_MAJOR}=/usr/lib/postgresql/${PG_VERSION_MAJOR}/bin/pg_config"
 
+COPY ./lindera-cache /tmp/paradedb/lindera-cache
+# COPY ./dictionaries /tmp/paradedb/dictionaries
+
+RUN mkdir -p /root/.cargo && \
+    echo '[patch.crates-io]' >> /root/.cargo/config.toml && \
+    echo 'lindera-cc-cedict = { path = "/tmp/paradedb/lindera-cache/lindera-cc-cedict"  }' >> /root/.cargo/config.toml && \
+    echo 'lindera-dictionary = { path = "/tmp/paradedb/lindera-cache/lindera-dictionary"  }' >> /root/.cargo/config.toml && \
+    echo 'lindera-ipadic = { path = "/tmp/paradedb/lindera-cache/lindera-ipadic"  }' >> /root/.cargo/config.toml && \
+    echo 'lindera-ipadic-neologd = { path = "/tmp/paradedb/lindera-cache/lindera-ipadic-neologd"  }' >> /root/.cargo/config.toml && \
+    echo 'lindera-ko-dic = { path = "/tmp/paradedb/lindera-cache/lindera-ko-dic"  }' >> /root/.cargo/config.toml && \
+    echo 'lindera-unidic = { path = "/tmp/paradedb/lindera-cache/lindera-unidic"  }' >> /root/.cargo/config.toml
+
+# 设置环境变量以使用本地字典文件
+# ENV LINDERA_DICTIONARY_PATH=/tmp/paradedb/dictionaries 
+
 # Build the extension
 WORKDIR /tmp/paradedb/pg_search
 RUN cargo pgrx package --features icu --pg-config "/usr/lib/postgresql/${PG_VERSION_MAJOR}/bin/pg_config"
